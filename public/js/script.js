@@ -16,18 +16,19 @@ const answers_no = [
     "Ok, Let's just start over.."
 ];
 
-const answers_yes = "Yes";
-
 const no_button = document.getElementById('no-button');
 const yes_button = document.getElementById('yes-button');
+const buttons = document.getElementsByClassName('buttons')[0];
+const presentation = document.getElementById('presentation');
+const slideText = document.getElementById('slide-text');
+const banner = document.getElementById('banner');
 
 let i = 1;
 let size = 50;
 let clicks = 0;
 
+/* NO button logic (unchanged funny behavior) */
 no_button.addEventListener('click', () => {
-    let banner = document.getElementById('banner');
-
     if (clicks === 0) {
         banner.src = "public/no.gif";
         refreshBanner();
@@ -35,42 +36,56 @@ no_button.addEventListener('click', () => {
 
     clicks++;
 
-    // Increase Yes button size randomly
     const sizes = [40, 50, 30, 35, 45];
-    const random = Math.floor(Math.random() * sizes.length);
-    size += sizes[random];
+    size += sizes[Math.floor(Math.random() * sizes.length)];
 
     yes_button.style.height = `${size}px`;
     yes_button.style.width = `${size}px`;
 
-    let total = answers_no.length;
-
-    if (i < total - 1) {
-        no_button.innerHTML = answers_no[i];
+    if (i < answers_no.length - 1) {
+        no_button.innerText = answers_no[i];
         i++;
     } else {
         alert(answers_no[i]);
         i = 1;
-        no_button.innerHTML = answers_no[0];
-        yes_button.innerHTML = answers_yes;
+        no_button.innerText = answers_no[0];
         yes_button.style.height = "50px";
         yes_button.style.width = "50px";
         size = 50;
     }
 });
 
+/* YES button → Romantic presentation */
+const slides = [
+    "Yayyy 🥰",
+    "I knew you’d say YES 💖",
+    "You make my world brighter ✨",
+    "Every moment feels special with you 😘",
+    "Happy Valentine’s Day ❤️"
+];
+
+let slideIndex = 0;
+
 yes_button.addEventListener('click', () => {
-    let banner = document.getElementById('banner');
     banner.src = "public/yes.gif";
     refreshBanner();
 
-    document.getElementsByClassName('buttons')[0].style.display = "none";
-    document.getElementsByClassName('message')[0].style.display = "block";
+    buttons.style.display = "none";
+    presentation.style.display = "block";
+
+    showSlides();
 });
 
+function showSlides() {
+    if (slideIndex < slides.length) {
+        slideText.innerText = slides[slideIndex];
+        slideIndex++;
+        setTimeout(showSlides, 2000);
+    }
+}
+
 function refreshBanner() {
-    let banner = document.getElementById('banner');
-    let src = banner.src;
+    const src = banner.src;
     banner.src = '';
     banner.src = src;
 }
